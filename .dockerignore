@@ -1,0 +1,11 @@
+.git
+.github
+.env
+.env.*
+node_modules
+*.log
+report.html
+README.md
+render.yaml
+Dockerfile
+.dockerignore
