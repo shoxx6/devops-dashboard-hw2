@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: devops-dashboard-2023100263
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+
