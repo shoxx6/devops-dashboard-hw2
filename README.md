@@ -22,15 +22,6 @@ docker run --rm -p 10000:10000 sms-spam-checker
 
 Docker trains the model in a build stage and copies only the generated model into the runtime image; the raw message corpus is not included in the final image.
 
-## GitHub Actions and Docker Hub
-
-The workflow builds the image on pull requests and publishes it to Docker Hub on pushes to `main`, using `latest` and commit SHA tags. Add these repository secrets:
-
-- `DOCKERHUB_USERNAME`
-- `DOCKERHUB_TOKEN`
-
-The image name is `shoxx6/devops-dashboard-hw2`.
-
 ## Model and data
 
 The training script uses a fixed 80/20 stratified split with seed 42 and reports accuracy, spam precision, recall, and F1 on held-out messages. The model stores token counts in a small JSON file and runs with no third-party Python packages. A local copy of the corpus can be placed at `data/SMSSpamCollection`; otherwise the script reads the bundled zip archive.
