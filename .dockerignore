@@ -3,9 +3,14 @@
 .env
 .env.*
 node_modules
+__pycache__
+*.py[cod]
 *.log
 report.html
 README.md
 render.yaml
 Dockerfile
 .dockerignore
+models
+data/SMSSpamCollection
+sms-spam-extracted

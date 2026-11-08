@@ -1,12 +1,25 @@
-FROM node:22-alpine
+FROM python:3.12-slim AS model-build
 
-ENV NODE_ENV=production
+WORKDIR /build
+COPY train_model.py ./
+COPY data/sms-spam-collection.zip ./data/sms-spam-collection.zip
+RUN python train_model.py
+
+FROM python:3.12-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PORT=10000
+
+RUN useradd --create-home --uid 10001 appuser
 WORKDIR /app
 
-COPY --chown=node:node package.json server.js ./
-COPY --chown=node:node public ./public
+COPY --from=model-build --chown=appuser:appuser /build/models ./models
+COPY --chown=appuser:appuser app.py train_model.py ./
+COPY --chown=appuser:appuser public ./public
 
-USER node
-EXPOSE 3000
+USER appuser
+EXPOSE 10000
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:10000/health', timeout=2)" || exit 1
 
-CMD ["node", "server.js"]
+CMD ["python", "app.py"]
