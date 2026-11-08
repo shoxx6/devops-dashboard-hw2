@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DevOps Dashboard</title>
+  <style>
+    :root { --navy:#102a43; --blue:#1976d2; --mint:#dff7ec; --ink:#183b56; --muted:#627d98; --bg:#f5f8fb; }
+    * { box-sizing:border-box; } body { margin:0; font-family:Segoe UI, Arial, sans-serif; color:var(--ink); background:var(--bg); }
+    .top { background:linear-gradient(120deg,#102a43,#1976d2); color:white; padding:24px 8vw 54px; }
+    nav { display:flex; justify-content:space-between; align-items:center; max-width:1100px; margin:auto; }
+    .brand { font-weight:800; letter-spacing:.4px; } .badge { border:1px solid #9ed0ff; border-radius:99px; padding:7px 12px; font-size:12px; }
+    .hero { max-width:1100px; margin:42px auto 0; display:flex; justify-content:space-between; gap:35px; align-items:center; }
+    h1 { font-size:46px; line-height:1.08; margin:0 0 16px; } .hero p { color:#d9ecff; font-size:17px; max-width:600px; line-height:1.6; }
+    .hero-mark { width:150px; height:150px; border-radius:32px; background:rgba(255,255,255,.15); display:grid; place-items:center; font-size:64px; box-shadow:0 15px 35px #0d315655; }
+    main { max-width:1100px; margin:-30px auto 50px; padding:0 20px; position:relative; } .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+    .card { background:white; border-radius:18px; padding:22px; box-shadow:0 8px 24px #102a4312; border:1px solid #e6eef5; } .card h3 { margin:0 0 10px; }
+    .metric { font-size:31px; font-weight:800; color:var(--blue); } .label { color:var(--muted); font-size:13px; }
+    .section { margin-top:24px; } .section h2 { margin:0 0 14px; font-size:22px; } .pipeline { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; }
+    .step { text-align:center; padding:16px 8px; background:#f4f8fc; border-radius:12px; font-size:13px; font-weight:700; } .step.done { background:var(--mint); color:#166534; }
+    .step span { display:block; font-size:22px; margin-bottom:7px; } .footer { text-align:center; color:var(--muted); font-size:12px; margin-top:24px; }
+    @media(max-width:720px){ h1{font-size:34px}.hero{display:block}.hero-mark{display:none}.grid{grid-template-columns:1fr}.pipeline{grid-template-columns:1fr 1fr} }
+  </style>
+</head>
+<body>
+  <header class="top"><nav><div class="brand">OPEN SOURCE SW · HW2</div><div class="badge">● SERVICE ONLINE</div></nav>
+    <div class="hero"><div><h1>DevOps Dashboard</h1><p>코드 변경부터 서비스 배포까지의 상태를 한 화면에서 확인하는 경량 웹 서비스입니다.</p></div><div class="hero-mark">∞</div></div>
+  </header>
+  <main>
+    <section class="grid">
+      <div class="card"><div class="label">SERVICE STATUS</div><div class="metric">Healthy</div><div class="label">HTTP /health endpoint</div></div>
+      <div class="card"><div class="label">RELEASE VERSION</div><div class="metric">v1.0.0</div><div class="label">production-ready build</div></div>
+      <div class="card"><div class="label">LAST DEPLOY</div><div class="metric">Success</div><div class="label">automated pipeline</div></div>
+    </section>
+    <section class="card section"><h2>Delivery pipeline</h2><div class="pipeline"><div class="step done"><span>✓</span>Source</div><div class="step done"><span>✓</span>Build</div><div class="step done"><span>✓</span>Test</div><div class="step done"><span>✓</span>Deploy</div><div class="step done"><span>✓</span>Monitor</div></div></section>
+    <section class="card section"><h2>Project summary</h2><p style="line-height:1.7;margin:0;color:#486581">GitHub 기반 버전 관리와 자동화된 배포 흐름을 가정한 학습용 서비스입니다. Node.js 기본 모듈만 사용하여 별도 패키지 설치 없이 실행할 수 있으며, 상태 확인 API를 제공합니다.</p></section>
+    <div class="footer">Open Source SW Development Methods and Tools · Homework 2</div>
+  </main>
+</body>
+</html>
+
