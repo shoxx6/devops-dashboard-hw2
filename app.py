@@ -106,6 +106,7 @@ class Handler(BaseHTTPRequestHandler):
         label, probabilities = predict(MODEL, text.strip())
         self.send_json(200, {
             "label": label,
+            "message_length": len(text.strip()),
             "spam_probability": round(probabilities["spam"], 6),
             "ham_probability": round(probabilities["ham"], 6),
             "model": MODEL["model_type"],
