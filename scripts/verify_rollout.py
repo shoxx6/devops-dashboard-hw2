@@ -12,7 +12,7 @@ from urllib.request import Request, urlopen
 SAMPLE = "URGENT! You have won a free prize. Call now to claim your reward!"
 PAYLOAD = json.dumps({"text": SAMPLE}).encode()
 OLD_SHA = os.environ["BASELINE_REVISION"]
-NEW_SHA = os.environ["GITHUB_SHA"]
+NEW_SHA = os.environ.get("IMAGE_REVISION") or os.environ["GITHUB_SHA"]
 REPOSITORY = os.environ["IMAGE_REPOSITORY"]
 STABLE_PORT = 18080
 
@@ -93,9 +93,9 @@ def monitor(done, samples, stage):
         done.wait(1)
 
 
-def summary(samples):
+def summary(samples, environment="GitHub-hosted Ubuntu runner"):
     lines = ["## SMS Spam Checker rollout", "",
-             "GitHub-hosted Ubuntu runner · POST `http://127.0.0.1:18080/api/predict`", "",
+             f"{environment} · POST `http://127.0.0.1:18080/api/predict`", "",
              "| Phase | Successful / sent | Image revision | Label | Message length |",
              "| --- | ---: | --- | --- | --- |"]
     counts = {}
@@ -108,8 +108,7 @@ def summary(samples):
         lines.append(f"| {phase} | {len(good)}/{len(rows)} | {versions} | "
                      f"{'spam' if good else '—'} | {lengths} |")
     failures = sum(sent - good for good, sent in counts.values())
-    lines += ["", f"**{len(samples)} requests · {failures} failed**", "",
-              f"Image change: `{OLD_SHA[:7]}` → `{NEW_SHA[:7]}`."]
+    lines += ["", f"**{len(samples)} requests · {failures} failed**"]
     with Path(os.environ["GITHUB_STEP_SUMMARY"]).open("a", encoding="utf-8") as output:
         output.write("\n".join(lines) + "\n")
     return all(good > 0 and good == sent for good, sent in counts.values())

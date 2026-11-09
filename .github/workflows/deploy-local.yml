@@ -1,0 +1,45 @@
+name: Deploy SMS checker locally
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Build and publish Docker image"]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sms-local-deployment
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: >-
+      (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.event == 'push' &&
+       github.event.workflow_run.head_repository.full_name == github.repository)
+    runs-on: [self-hosted, Windows, X64, sms-hw3]
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Deploy image and verify API before, during, and after
+        shell: powershell
+        env:
+          BASELINE_REVISION: a464fd0eeb233d1900aecb48aa7b7b73e65e90e6
+          IMAGE_REPOSITORY: shoxx6/devops-dashboard-hw2
+          IMAGE_REVISION: ${{ github.event.workflow_run.head_sha || github.sha }}
+        run: |
+          $dockerBin = Join-Path $env:LOCALAPPDATA 'Programs\DockerDesktop\resources\bin'
+          $env:Path = "$dockerBin;$env:Path"
+          $env:DOCKER_CONFIG = Join-Path $env:RUNNER_TEMP "sms-docker-$env:GITHUB_RUN_ID"
+          New-Item -ItemType Directory -Force $env:DOCKER_CONFIG | Out-Null
+          '{"auths":{"https://index.docker.io/v1/":{}}}' | Set-Content -Encoding ascii (Join-Path $env:DOCKER_CONFIG 'config.json')
+          python scripts/deploy_local.py
